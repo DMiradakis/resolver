@@ -1,0 +1,9 @@
+{
+  "activeProfile": "didact",
+  "profiles": {
+    "didact": {
+      "projectRootDirectory": "",
+      "projectArchiveRootDirectory": ""
+    }
+  }
+}
