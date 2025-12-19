@@ -17,12 +17,12 @@ namespace Resolver.Projects
             _configService = configService;
         }
 
-        public void ScaffoldProject(string newProjectName)
+        public void ScaffoldProject(string newProjectFolderName)
         {
             var profileConfig = _configService.GetActiveProfileConfig();
 
             // Create project base directory.
-            var projectBaseDirectory = Path.Combine(profileConfig.ProjectRootDirectory, newProjectName);
+            var projectBaseDirectory = Path.Combine(profileConfig.ProjectRootDirectory, newProjectFolderName);
             _ = Directory.CreateDirectory(projectBaseDirectory);
 
             _logger.LogInformation("Creating project subfolders...");
