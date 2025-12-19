@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Resolver.Config;
 using Resolver.Constants;
 using Resolver.DependencyInjection;
@@ -21,6 +22,8 @@ builder.Services.Configure<ResolverConfig>(resolverConfiguration);
 
 #endregion
 
+builder.Logging.ClearProviders();
+builder.Logging.AddProvider(new Resolver.Logging.SpectreLoggerProvider());
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton<ProjectsService>();
 

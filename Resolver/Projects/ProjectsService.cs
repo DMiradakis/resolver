@@ -23,6 +23,11 @@ namespace Resolver.Projects
 
             // Create project base directory.
             var projectBaseDirectory = Path.Combine(profileConfig.ProjectRootDirectory, newProjectFolderName);
+            if (Directory.Exists(projectBaseDirectory))
+            {
+                _logger.LogError("Project directory already exists. Aborting scaffold operation.");
+                return;
+            }
             _ = Directory.CreateDirectory(projectBaseDirectory);
 
             _logger.LogInformation("Creating project subfolders...");
