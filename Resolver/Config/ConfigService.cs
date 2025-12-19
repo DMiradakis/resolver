@@ -12,10 +12,17 @@ namespace Resolver.Config
             _config = config;
         }
 
+        public static string? GetAppDirectory()
+        {
+            var exePath = Environment.ProcessPath;
+            return Path.GetDirectoryName(exePath);
+        }
+
         public static string? GetConfigPath()
         {
+            var appDirectory = GetAppDirectory();
             var localPath = Path.Combine(
-                Directory.GetCurrentDirectory(),
+                appDirectory,
                 ResolverConstants.ConfigFileName);
 
             if (File.Exists(localPath))

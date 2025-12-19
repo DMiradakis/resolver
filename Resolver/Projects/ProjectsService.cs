@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Resolver.Config;
+using Resolver.Constants;
+using Spectre.Console;
+using System.IO.Compression;
 
 namespace Resolver.Projects
 {
@@ -14,16 +17,62 @@ namespace Resolver.Projects
             _configService = configService;
         }
 
-        public void ScaffoldProject()
+        public void ScaffoldProject(string newProjectName)
         {
             var profileConfig = _configService.GetActiveProfileConfig();
 
-            
+            // Create project base directory.
+            var projectBaseDirectory = Path.Combine(profileConfig.ProjectRootDirectory, newProjectName);
+            _ = Directory.CreateDirectory(projectBaseDirectory);
+
+            _logger.LogInformation("Creating project subfolders...");
+
+            // Create scaffold subdirectories.
+            foreach (var folder in ResolverConstants.ScaffoldSubfolders)
+            {
+                Directory.CreateDirectory(Path.Combine(projectBaseDirectory, folder));
+            };
+
+            _logger.LogInformation("Project subfolders created successfully.");
         }
 
-        public void ArchiveProject()
+        public void ArchiveProject(string projectFolderName)
         {
             var profileConfig = _configService.GetActiveProfileConfig();
+            var projectPath = Path.Combine(profileConfig.ProjectRootDirectory, projectFolderName);
+
+            var zipFileName = $"{projectFolderName}.zip";
+            var tempZipPath = Path.Combine(Path.GetTempPath(), zipFileName);
+            var finalZipPath = Path.Combine(profileConfig.ProjectArchiveRootDirectory, zipFileName);
+
+            _logger.LogInformation("Checking and recycling temp cache for project...");
+
+            // Clear project cache from temp folder if exists.
+            if (File.Exists(tempZipPath))
+                File.Delete(tempZipPath);
+
+            _logger.LogInformation("Creating project zip file...");
+
+            // Create zip file in temp folder
+            ZipFile.CreateFromDirectory(
+                projectPath,
+                tempZipPath,
+                CompressionLevel.Optimal,
+                includeBaseDirectory: true);
+
+            // Delete if exists in archive
+            if (File.Exists(finalZipPath))
+            {
+                _logger.LogWarning("Project preexists in archive. Overwriting...");
+                AnsiConsole.MarkupLine(
+                    $"[yellow]Archive already exists, overwriting:[/] {finalZipPath}");
+                File.Delete(finalZipPath);
+            }
+
+            // Move from temp to archive
+            File.Move(tempZipPath, finalZipPath);
+
+            _logger.LogInformation("Project archived successfully.");
         }
     }
 }
