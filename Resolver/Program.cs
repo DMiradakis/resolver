@@ -32,12 +32,36 @@ var app = new CommandApp(registrar);
 app.Configure(config =>
 {
     config.SetApplicationName(ResolverConstants.AppName.ToLower());
-    config.AddCommand<ScaffoldProjectCommand>("scaffold")
-        .WithDescription("Scaffolds a new Da Vinci Resolve project directory with subfolders.")
-        .WithExample("scaffold my-project");
-    config.AddCommand<ArchiveProjectCommand>("archive")
-        .WithDescription("Archives an existing Da Vinci Resolve project directory.")
-        .WithExample("archive my-project");
+    config.AddBranch("project", projectConfig =>
+    {
+        projectConfig.AddCommand<ScaffoldProjectCommand>("scaffold")
+            .WithDescription("Scaffolds a new Da Vinci Resolve project directory with subfolders.")
+            .WithExample("scaffold my-project");
+        projectConfig.AddCommand<ArchiveProjectCommand>("archive")
+            .WithDescription("Archives an existing Da Vinci Resolve project directory.")
+            .WithExample("archive my-project");
+    });
+    config.AddBranch("config", resolverConfig =>
+    {
+        resolverConfig.AddBranch("profile", profileConfig =>
+        {
+            //profileConfig.AddCommand("init")
+            //    .WithDescription("Initializes a new config profile with default values.")
+            //    .WithExample("config profile init my-profile");
+            profileConfig.AddCommand<ConfigProfileSetCommand>("set")
+                .WithDescription("Sets the active config profile.")
+                .WithExample("config profile set my-profile");
+        });
+        //resolverConfig.AddCommand("init")
+        //    .WithDescription("Initializes a new config file with default values.")
+        //    .WithExample("config init");
+        //resolverConfig.AddCommand("set")
+        //    .WithDescription("Sets a config value in the active profile.")
+        //    .WithExample("config set ProjectRootDirectory /path/to/projects");
+        //resolverConfig.AddCommand("inspect")
+        //    .WithDescription("Inspects all config values.")
+        //    .WithExample("config inspect");
+    });
 });
 
 return app.Run(args);

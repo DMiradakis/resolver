@@ -1,15 +1,25 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Resolver.Constants;
+using System.Text.Json;
 
 namespace Resolver.Config
 {
     public class ConfigService
     {
+        private readonly ILogger<ConfigService> _logger;
         private readonly IOptions<ResolverConfig> _config;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public ConfigService(IOptions<ResolverConfig> config)
+        public ConfigService(ILogger<ConfigService> logger, IOptions<ResolverConfig> config)
         {
+            _logger = logger;
             _config = config;
+            _jsonSerializerOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true
+            };
         }
 
         public static string? GetAppDirectory()
@@ -52,6 +62,18 @@ namespace Resolver.Config
             }
 
             return profileConfig;
+        }
+
+        public void SetActiveProfile(string profileName)
+        {
+            var configPath = GetConfigPath();
+            var configJson = File.ReadAllText(configPath);
+            var config = JsonSerializer.Deserialize<ResolverConfig>(configJson);
+            _logger.LogInformation("The current json is: {json}", configJson);
+            config.ActiveProfile = profileName;
+            var updatedConfigJson = JsonSerializer.Serialize(config, _jsonSerializerOptions);
+            _logger.LogInformation("The updated json is: {json}", updatedConfigJson);
+            File.WriteAllText(configPath, updatedConfigJson);
         }
     }
 }
