@@ -45,9 +45,9 @@ app.Configure(config =>
     {
         resolverConfig.AddBranch("profile", profileConfig =>
         {
-            //profileConfig.AddCommand("init")
-            //    .WithDescription("Initializes a new config profile with default values.")
-            //    .WithExample("config profile init my-profile");
+            profileConfig.AddCommand<ConfigProfileInitCommand>("init")
+                .WithDescription("Initializes a new config profile with null values.")
+                .WithExample("config profile init my-profile");
             profileConfig.AddCommand<ConfigProfileSetCommand>("set")
                 .WithDescription("Sets the active config profile.")
                 .WithExample("config profile set my-profile");
@@ -58,9 +58,9 @@ app.Configure(config =>
         //resolverConfig.AddCommand("set")
         //    .WithDescription("Sets a config value in the active profile.")
         //    .WithExample("config set ProjectRootDirectory /path/to/projects");
-        //resolverConfig.AddCommand("inspect")
-        //    .WithDescription("Inspects all config values.")
-        //    .WithExample("config inspect");
+        resolverConfig.AddCommand<ConfigInspectCommand>("inspect")
+            .WithDescription("Inspects all config values.")
+            .WithExample("config inspect");
     });
 });
 

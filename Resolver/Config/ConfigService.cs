@@ -75,5 +75,31 @@ namespace Resolver.Config
             _logger.LogInformation("The updated json is: {json}", updatedConfigJson);
             File.WriteAllText(configPath, updatedConfigJson);
         }
+
+        public void InitProfile(string profileName)
+        {
+            var configPath = GetConfigPath();
+            var configJson = File.ReadAllText(configPath);
+            var config = JsonSerializer.Deserialize<ResolverConfig>(configJson);
+            var profileExists = config.Profiles.TryGetValue(profileName, out _);
+            if (profileExists)
+            {
+                _logger.LogError("The profile name {pn} already exists. Aborting operation.", profileName);
+                return;
+            }
+
+            config.Profiles.TryAdd(profileName, new ResolverConfig.ResolverProfile());
+            var updatedJsonConfig = JsonSerializer.Serialize(config, _jsonSerializerOptions);
+            File.WriteAllText(configPath, updatedJsonConfig);
+            _logger.LogInformation("Profile initialized successfully.");
+        }
+
+        public void InspectConfig()
+        {
+            var configPath = GetConfigPath();
+            var configJson = File.ReadAllText(configPath);
+            _logger.LogInformation("See the config file values below:");
+            _logger.LogInformation("{json}", configJson);
+        }
     }
 }

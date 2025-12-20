@@ -2,18 +2,18 @@
 
 namespace Resolver.Config
 {
-    public class ConfigProfileSetCommand : Command<ProfileNameSettings>
+    public class ConfigProfileInitCommand : Command<ProfileNameSettings>
     {
         private readonly ConfigService _configService;
 
-        public ConfigProfileSetCommand(ConfigService configService)
+        public ConfigProfileInitCommand(ConfigService configService)
         {
             _configService = configService;
         }
 
         public override int Execute(CommandContext context, ProfileNameSettings settings, CancellationToken cancellationToken)
         {
-            _configService.SetActiveProfile(settings.ProfileName);
+            _configService.InitProfile(settings.ProfileName);
             return 0;
         }
     }
