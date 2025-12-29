@@ -22,13 +22,15 @@ namespace Resolver.Config
             };
         }
 
-        public static string? GetAppDirectory()
+        public static string GetAppDirectory()
         {
-            var exePath = Environment.ProcessPath;
-            return Path.GetDirectoryName(exePath);
+            var exePath = Environment.ProcessPath
+                ?? throw new Exception("Could not determine application directory.");
+            return Path.GetDirectoryName(exePath)
+                ?? throw new Exception("Could not determine application directory.");
         }
 
-        public static string? GetConfigPath()
+        public static string GetConfigPath()
         {
             var appDirectory = GetAppDirectory();
             var localPath = Path.Combine(
@@ -46,20 +48,19 @@ namespace Resolver.Config
             if (File.Exists(appDataPath))
                 return appDataPath;
 
-            return null;
+            throw new Exception(
+                "Could not find a config file in either the application directory or the AppData directory. Please initialize a config file."
+                );
         }
 
         public ResolverConfig.ResolverProfile GetActiveProfileConfig()
         {
             var configExists = _config.Value.Profiles.TryGetValue(_config.Value.ActiveProfile, out var profileConfig);
             if (!configExists)
-            {
                 throw new Exception("An active config profile has not been selected. Please set an active config profile.");
-            }
+
             if (profileConfig is null)
-            {
                 throw new Exception("The selected config profile is NULL. Please set the profile's config values.");
-            }
 
             return profileConfig;
         }
@@ -68,25 +69,30 @@ namespace Resolver.Config
         {
             var configPath = GetConfigPath();
             var configJson = File.ReadAllText(configPath);
-            var config = JsonSerializer.Deserialize<ResolverConfig>(configJson);
-            _logger.LogInformation("The current json is: {json}", configJson);
+            var config = JsonSerializer.Deserialize<ResolverConfig>(configJson)
+                ?? throw new Exception("Could not read config file. Aborting operation.");
+
+            var profileExists = config.Profiles.TryGetValue(profileName, out _);
+            if (!profileExists)
+                throw new Exception($"The profile name {profileName} does not exist. Aborting operation.");
+
             config.ActiveProfile = profileName;
             var updatedConfigJson = JsonSerializer.Serialize(config, _jsonSerializerOptions);
-            _logger.LogInformation("The updated json is: {json}", updatedConfigJson);
             File.WriteAllText(configPath, updatedConfigJson);
+            _logger.LogInformation("Active profile set to {pn} successfully.", profileName);
         }
 
         public void InitProfile(string profileName)
         {
             var configPath = GetConfigPath();
             var configJson = File.ReadAllText(configPath);
-            var config = JsonSerializer.Deserialize<ResolverConfig>(configJson);
+            var config = JsonSerializer.Deserialize<ResolverConfig>(configJson)
+                ?? throw new Exception("Could not read config file. Aborting operation.");
+
+            // Check if profile already exists.
             var profileExists = config.Profiles.TryGetValue(profileName, out _);
             if (profileExists)
-            {
-                _logger.LogError("The profile name {pn} already exists. Aborting operation.", profileName);
-                return;
-            }
+                throw new Exception($"The profile name {profileName} already exists. Aborting operation.");
 
             config.Profiles.TryAdd(profileName, new ResolverConfig.ResolverProfile());
             var updatedJsonConfig = JsonSerializer.Serialize(config, _jsonSerializerOptions);
@@ -101,5 +107,81 @@ namespace Resolver.Config
             _logger.LogInformation("See the config file values below:");
             _logger.LogInformation("{json}", configJson);
         }
+
+        public void InitConfig()
+        {
+            var configPath = GetConfigPath();
+            if (File.Exists(configPath))
+                throw new Exception($"A config file already exists at {configPath}.");
+
+            var resolverConfig = new ResolverConfig();
+            var initialJsonConfig = JsonSerializer.Serialize(resolverConfig, _jsonSerializerOptions);
+            File.WriteAllText(configPath, initialJsonConfig);
+            _logger.LogInformation("Config file initialized successfully at {path}.", configPath);
+        }
+
+        private void WriteInMemoryConfigBackToFile()
+        {
+            var updatedConfig = JsonSerializer.Serialize(_config, _jsonSerializerOptions);
+            var configPath = GetConfigPath();
+            File.WriteAllText(configPath, updatedConfig);
+        }
+
+        public void SaveConfigSetting(string configSetterKey, string configSetterValue)
+        {
+            var currentConfig = GetActiveProfileConfig();
+
+            if (configSetterKey == ResolverConstants.ConfigKeyMappings.ProjectRootDirectoryMapping.JsonKey)
+            {
+                var path = Path.GetFullPath(configSetterValue);
+                currentConfig.ProjectRootDirectory = path;
+                WriteInMemoryConfigBackToFile();
+                _logger.LogInformation("Config key {key} updated successfully.", configSetterKey);
+                return;
+            }
+            else if (configSetterKey == ResolverConstants.ConfigKeyMappings.ProjectArchiveRootDirectoryMapping.JsonKey)
+            {
+                var path = Path.GetFullPath(configSetterValue);
+                currentConfig.ProjectArchiveRootDirectory = path;
+                WriteInMemoryConfigBackToFile();
+                _logger.LogInformation("Config key {key} updated successfully.", configSetterKey);
+                return;
+            }
+            else
+            {
+                string[] configKeys = [ ResolverConstants.ConfigKeyMappings.ProjectRootDirectoryMapping.JsonKey,
+                                 ResolverConstants.ConfigKeyMappings.ProjectArchiveRootDirectoryMapping.JsonKey ];
+                throw new Exception($"Invalid config key: {configSetterKey}. Valid keys are: {string.Join(", ", configKeys)}");
+            }
+        }
+
+        #region Deprecated
+
+        private (string, string) SplitConfigSetterIntoKeyAndValue(string configSetterString)
+        {
+            // Validate input.
+            if (string.IsNullOrEmpty(configSetterString))
+                throw new Exception("No config key-value pair provided.");
+
+            // Validate split.
+            var parts = configSetterString.Split('=', 2);
+            if (parts.Length != 2)
+                throw new Exception("Expected format: key=value");
+
+            var configSetterKey = parts[0];
+            var configSetterValue = parts[1];
+
+            // Validate key.
+            if (string.IsNullOrEmpty(configSetterKey))
+                throw new Exception("Config key cannot be empty.");
+
+            // Validate value.
+            if (string.IsNullOrEmpty(configSetterValue))
+                throw new Exception("Config value cannot be empty.");
+
+            return (configSetterKey, configSetterValue);
+        }
+
+        #endregion
     }
 }
