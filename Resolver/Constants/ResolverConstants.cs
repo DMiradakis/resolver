@@ -20,5 +20,20 @@
             "ResolveProjectFiles",
             "ProjectNotes"
         ];
+
+        public static class ConfigKeyMappings
+        {
+            public static class ProjectRootDirectoryMapping
+            {
+                public const string JsonKey = "projectRootDirectory";
+                public const string FriendlyKey = "projectRootDirectory";
+            }
+
+            public static class ProjectArchiveRootDirectoryMapping
+            {
+                public const string JsonKey = "projectArchiveRootDirectory";
+                public const string FriendlyKey = "projectArchiveRootDirectory";
+            }
+        }
     }
 }
