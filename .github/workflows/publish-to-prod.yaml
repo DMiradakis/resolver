@@ -51,11 +51,22 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      
-      - name: Publish
+
+      - name: Publish (Unix)
+        if: matrix.os != 'windows'
         run: |
           dotnet publish src/${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj \
+            -c Release \
             -r ${{ matrix.rid }} \
+            -o ./publish
+      
+      - name: Publish (Windows)
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          dotnet publish src/${{ env.APP_NAME }}/${{ env.APP_NAME }}.csproj `
+            -c Release `
+            -r ${{ matrix.rid }} `
             -o ./publish
       
       - name: Rename binary (Unix)
