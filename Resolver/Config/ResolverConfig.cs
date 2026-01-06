@@ -17,6 +17,9 @@ namespace Resolver.Config
 
             [JsonPropertyName("projectArchiveRootDirectory")]
             public string ProjectArchiveRootDirectory { get; set; } = string.Empty;
+
+            [JsonPropertyName("projectExportRootDirectory")]
+            public string ProjectExportRootDirectory { get; set; } = string.Empty;
         }
     }
 }

@@ -158,6 +158,14 @@ namespace Resolver.Config
                 _logger.LogInformation("Config key {key} updated successfully.", configSetterKey);
                 return;
             }
+            else if (configSetterKey == ResolverConstants.ConfigKeyMappings.ProjectExportRootDirectoryMapping.JsonKey)
+            {
+                var path = Path.GetFullPath(configSetterValue);
+                currentConfig.ProjectExportRootDirectory = path;
+                WriteInMemoryConfigBackToFile();
+                _logger.LogInformation("Config key {key} updated successfully.", configSetterKey);
+                return;
+            }
             else
             {
                 string[] configKeys = [ ResolverConstants.ConfigKeyMappings.ProjectRootDirectoryMapping.JsonKey,
