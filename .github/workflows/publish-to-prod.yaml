@@ -7,9 +7,12 @@ on:
 
 env:
   APP_NAME: Resolver
+  BRANCH_NAME: production
 
 jobs:
   build:
+    # Enforce branch restriction
+    if: github.ref_name == ${{ env.BRANCH_NAME }}
     name: Build ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
