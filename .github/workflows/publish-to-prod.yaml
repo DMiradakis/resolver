@@ -105,15 +105,13 @@ jobs:
       - name: Generate SHA256 checksums
         run: |
           cd artifacts
-          find . -type f -exec sha256sum {} \; > checksums.sha256
+          find . -type f ! -name 'checksums.sha256' -exec sha256sum {} \; > checksums.sha256
       
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
-          files: |
-            artifacts/**/*
-            artifacts/checksums.sha256
+          files: artifacts/**/*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
