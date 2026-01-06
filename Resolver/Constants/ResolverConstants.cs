@@ -4,6 +4,7 @@
     {
         public const string AppName = "Resolver";
         public const string ConfigFileName = "resolver.config.json";
+        public const string ProjectExportFolderName = "Exports";
         public static readonly string[] ScaffoldSubfolders =
         [
             "Footage/ScreenRecordings",
@@ -33,6 +34,12 @@
             {
                 public const string JsonKey = "projectArchiveRootDirectory";
                 public const string FriendlyKey = "projectArchiveRootDirectory";
+            }
+
+            public static class ProjectExportRootDirectoryMapping
+            {
+                public const string JsonKey = "projectExportRootDirectory";
+                public const string FriendlyKey = "projectExportRootDirectory";
             }
         }
     }
