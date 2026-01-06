@@ -5,13 +5,14 @@ param(
 $ErrorActionPreference = "Stop"
 
 $BinaryName = "resolver"
+$AppName = "Resolver"
 $Repo = "DMiradakis/resolver"
 
 if ($System) {
-    $InstallDir = "$env:ProgramFiles\Resolver"
+    $InstallDir = "$env:ProgramFiles\$AppName"
     $RequiresAdmin = $true
 } else {
-    $InstallDir = "$env:LOCALAPPDATA\Programs\Resolver"
+    $InstallDir = "$env:LOCALAPPDATA\Programs\$AppName"
     $RequiresAdmin = $false
 }
 
