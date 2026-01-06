@@ -12,7 +12,7 @@ env:
 jobs:
   build:
     # Enforce branch restriction
-    if: github.ref_name == ${{ env.BRANCH_NAME }}
+    if: github.ref_name == '${{ env.BRANCH_NAME }}'
     name: Build ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
