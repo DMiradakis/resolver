@@ -30,6 +30,13 @@ namespace Resolver.Config
                 ?? throw new Exception("Could not determine application directory.");
         }
 
+        public static string GetAppDataDirectory()
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                ResolverConstants.AppName);
+        }
+
         public static string GetConfigPath()
         {
             var appDirectory = GetAppDirectory();
@@ -40,10 +47,8 @@ namespace Resolver.Config
             if (File.Exists(localPath))
                 return localPath;
 
-            var appDataPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                ResolverConstants.AppName,
-                ResolverConstants.ConfigFileName);
+            var appDataDirectory = GetAppDataDirectory();
+            var appDataPath = Path.Combine(appDataDirectory,ResolverConstants.ConfigFileName);
 
             if (File.Exists(appDataPath))
                 return appDataPath;
@@ -110,14 +115,20 @@ namespace Resolver.Config
 
         public void InitConfig()
         {
-            var configPath = GetConfigPath();
-            if (File.Exists(configPath))
-                throw new Exception($"A config file already exists at {configPath}.");
+            var appDirectoryPath = GetAppDirectory();
+            var appDirectoryConfigPath = Path.Combine(appDirectoryPath, ResolverConstants.ConfigFileName);
+            if (File.Exists(appDirectoryConfigPath))
+                throw new Exception($"A config file already exists at {appDirectoryConfigPath}.");
+
+            var appDataDirectoryPath = GetAppDataDirectory();
+            var appDataDirectoryConfigPath = Path.Combine(appDataDirectoryPath, ResolverConstants.ConfigFileName);
+            if (File.Exists(appDataDirectoryConfigPath))
+                throw new Exception($"A config file already exists at {appDataDirectoryConfigPath}.");
 
             var resolverConfig = new ResolverConfig();
             var initialJsonConfig = JsonSerializer.Serialize(resolverConfig, _jsonSerializerOptions);
-            File.WriteAllText(configPath, initialJsonConfig);
-            _logger.LogInformation("Config file initialized successfully at {path}.", configPath);
+            File.WriteAllText(appDirectoryConfigPath, initialJsonConfig);
+            _logger.LogInformation("Config file initialized successfully at {path}.", appDirectoryConfigPath);
         }
 
         private void WriteInMemoryConfigBackToFile()
