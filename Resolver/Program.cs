@@ -40,6 +40,9 @@ app.Configure(config =>
         projectConfig.AddCommand<ArchiveProjectCommand>("archive")
             .WithDescription("Archives an existing Da Vinci Resolve project directory.")
             .WithExample("project archive my-project");
+        projectConfig.AddCommand<ExportProjectCommand>("export")
+            .WithDescription("Copies the project export files to the default export directory.")
+            .WithExample("project export my-project");
     });
     config.AddBranch("config", resolverConfig =>
     {

@@ -79,5 +79,33 @@ namespace Resolver.Projects
 
             _logger.LogInformation("Project archived successfully.");
         }
+
+        public void ExportProject(string projectFolderName)
+        {
+            var profileConfig = _configService.GetActiveProfileConfig();
+            var projectPath = Path.Combine(profileConfig.ProjectRootDirectory, projectFolderName);
+            var projectExportPath = Path.Combine(projectPath, ResolverConstants.ProjectExportFolderName);
+            var exportPath = Path.GetFullPath(profileConfig.ProjectExportRootDirectory);
+
+            if (!Directory.Exists(projectExportPath))
+                throw new Exception("No export folder found in the project directory.");
+
+            if (!Directory.Exists(exportPath))
+                throw new Exception("The configured export path does not exist.");
+
+            var exportFiles = Directory.GetFiles(projectExportPath);
+
+            if (exportFiles.Length == 0)
+                throw new Exception("No export files found in the project export folder.");
+
+            foreach (var filePath in exportFiles)
+            {
+                var fileName = Path.GetFileName(filePath);
+                var destinationPath = Path.Combine(exportPath, fileName);
+                File.Copy(filePath, destinationPath, overwrite: true);
+            }
+
+            _logger.LogInformation("Project export files copied successfully to {exportPath}.", exportPath);
+        }
     }
 }
