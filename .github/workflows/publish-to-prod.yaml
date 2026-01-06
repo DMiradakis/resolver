@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - production
-  pull_request:
-    branches:
-      - production
+    tags:
+      - 'v*'
 
 env:
   APP_NAME: Resolver
@@ -102,11 +101,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: Generate SHA256 checksums
+        run: |
+          cd artifacts
+          find . -type f -exec sha256sum {} \; > checksums.sha256
       
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/**/*
+          tag_name: ${{ github.ref_name }}
+          files: |
+            artifacts/**/*
+            artifacts/checksums.sha256
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
