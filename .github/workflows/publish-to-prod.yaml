@@ -9,9 +9,26 @@ env:
   APP_NAME: Resolver
 
 jobs:
+  verify:
+    name: Verify tag is on production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Verify tag is on production branch
+        run: |
+          BRANCHES=$(git branch -r --contains ${{ github.ref }})
+          if ! echo "$BRANCHES" | grep -q "origin/production"; then
+            echo "Error: Tag must be on production branch"
+            echo "Tag is on: $BRANCHES"
+            exit 1
+          fi
+
   build:
-    # Ensure the tag is on the production branch
-    if: contains(github.event.base_ref, 'production')
+    needs: verify  # Only run if verify passes
     name: Build ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
@@ -45,17 +62,6 @@ jobs:
     steps:
       - name: Checkout git repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Need full history to check branch
-
-      - name: Verify tag is on correct branch
-        run: |
-          BRANCHES=$(git branch -r --contains ${{ github.ref }})
-          if ! echo "$BRANCHES" | grep -q "origin/production"; then
-            echo "Error: Tag must be on production branch"
-            echo "Tag is on: $BRANCHES"
-            exit 1
-          fi
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
