@@ -11,7 +11,7 @@ env:
 jobs:
   build:
     # Enforce branch restriction
-    if: github.ref_name == 'production'
+    if: github.ref_name == 'production' || (github.event_name == 'pull_request' && github.base_ref == 'production')
     name: Build ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
