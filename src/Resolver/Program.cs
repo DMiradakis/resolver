@@ -6,6 +6,7 @@ using Resolver.Config;
 using Resolver.Constants;
 using Resolver.DependencyInjection;
 using Resolver.Projects;
+using Resolver.Versioning;
 using Spectre.Console.Cli;
 
 var builder = Host.CreateApplicationBuilder(args);
@@ -26,12 +27,16 @@ builder.Logging.ClearProviders();
 builder.Logging.AddProvider(new Resolver.Logging.SpectreLoggerProvider());
 builder.Services.AddSingleton<ConfigService>();
 builder.Services.AddSingleton<ProjectsService>();
+builder.Services.AddSingleton<VersionService>();
 
 var registrar = new TypeRegistrar(builder.Services);
 var app = new CommandApp(registrar);
 app.Configure(config =>
 {
     config.SetApplicationName(ResolverConstants.AppName.ToLower());
+    config.AddCommand<DisplayVersionCommand>("version")
+        .WithDescription("Displays the current version of the app.")
+        .WithExample("version");
     config.AddBranch("project", projectConfig =>
     {
         projectConfig.AddCommand<ScaffoldProjectCommand>("scaffold")
