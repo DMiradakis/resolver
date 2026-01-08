@@ -132,8 +132,8 @@ namespace Resolver.Config
         }
 
         private void WriteInMemoryConfigBackToFile()
-        {
-            var updatedConfig = JsonSerializer.Serialize(_config, _jsonSerializerOptions);
+        {            
+            var updatedConfig = JsonSerializer.Serialize(_config.Value, _jsonSerializerOptions);
             var configPath = GetConfigPath();
             File.WriteAllText(configPath, updatedConfig);
         }
