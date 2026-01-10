@@ -37,5 +37,7 @@ resolver project archive my-project
 ```
 
 See https://resolver.solopreneur.sh/essentials/workflows for all workflows.
+
 See https://resolver.solopreneur.sh/essentials/api for all CLI commands.
+
 See https://resolver.solopreneur.sh/essentials/config for configuration.
