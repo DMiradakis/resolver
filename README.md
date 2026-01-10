@@ -1,7 +1,7 @@
 # Resolver
 
 <p align="center">
-    <img src="https://resolver.solopreneur.sh/logo.png" length="800" width="800">
+    <img src="https://resolver.solopreneur.sh/logo.png" length="400" width="400">
 </p>
 
 A small CLI for assisting with content creation using Da Vinci Resolve.
