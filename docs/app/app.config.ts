@@ -5,6 +5,7 @@ export default defineAppConfig({
   seo: {
     title: 'My Docs',
     description: 'My awesome documentation',
+    lang: 'en'
   },
   ui: {
     colors: {
@@ -12,6 +13,7 @@ export default defineAppConfig({
     }
   },
   socials: {
-    x: 'https://x.com/dmiradev'
+    x: 'https://x.com/dmiradev',
+    youtube: 'https://www.youtube.com/@SolopreneurDev'
   }
 })
