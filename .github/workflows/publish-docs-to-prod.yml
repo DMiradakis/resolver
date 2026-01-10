@@ -1,10 +1,18 @@
 name: Publish docs to prod
 
 on:
+  # 1. Trigger after publish-to-prod completes
   workflow_run:
     workflows: ["publish-to-prod"]
     types:
       - completed
+
+  # 2. Trigger when docs change on production
+  push:
+    branches:
+      - production
+    paths:
+      - 'docs/**'
 
 jobs:
   build_and_deploy_job:
