@@ -10,5 +10,8 @@ export default defineAppConfig({
     colors: {
       primary: 'orange'
     }
+  },
+  socials: {
+    x: 'https://x.com/dmiradev'
   }
 })
