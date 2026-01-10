@@ -16,7 +16,7 @@ A small, cross platform utility CLI to use in conjunction with Da Vinci Resolve.
   ---
   color: neutral
   size: xl
-  to: /getting-started/installation
+  to: /getting-started/introduction
   trailing-icon: i-lucide-arrow-right
   ---
   Get started

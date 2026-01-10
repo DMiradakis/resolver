@@ -6,5 +6,9 @@ export default defineAppConfig({
     title: 'My Docs',
     description: 'My awesome documentation',
   },
-  // ... other configurations
+  ui: {
+    colors: {
+      primary: 'orange'
+    }
+  }
 })
