@@ -70,3 +70,7 @@ The built files will be in the `.output` directory, ready for deployment to any 
 ## 📄 License
 
 [MIT License](https://opensource.org/licenses/MIT) 
+
+## Notes to self
+
+I had to make a custom OgImage component to apply my custom orange theme to the auto-generated og images. I cannot currently pass in CSS vars from Nuxt UI or Tailwind into the OgImage module, so I had to hard code a color that works for me.
