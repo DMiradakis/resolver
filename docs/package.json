@@ -1,5 +1,8 @@
 {
   "name": "resolver-docs",
+  "engines": {
+    "node": "^20.0.0"
+  },
   "scripts": {
     "dev": "nuxt dev --extends docus",
     "build": "nuxt build --extends docus"
