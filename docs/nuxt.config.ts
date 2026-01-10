@@ -13,5 +13,8 @@ export default defineNuxtConfig({
     }, 
     gtag: {
         id: 'G-QLFG8NVHYX'
-    }
+    },
+    robots: {
+        sitemap: '/sitemap.xml'
+    },
 })
