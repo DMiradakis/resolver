@@ -109,8 +109,9 @@ namespace Resolver.Config
         {
             var configPath = GetConfigPath();
             var configJson = File.ReadAllText(configPath);
-            _logger.LogInformation("See the config file values below:");
+            _logger.LogInformation("Config file values:");
             _logger.LogInformation("{json}", configJson);
+            _logger.LogInformation("Config file location: {path}", configPath);
         }
 
         public void InitConfig()
