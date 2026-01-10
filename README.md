@@ -7,3 +7,11 @@
 A small CLI for assisting with content creation using Da Vinci Resolve.
 
 All information is available on the docsite: https://resolver.solopreneur.sh
+
+## Getting started
+
+See https://resolver.solopreneur.sh/getting-started/introduction
+
+## Installation
+
+See https://resolver.solopreneur.sh/getting-started/installation
