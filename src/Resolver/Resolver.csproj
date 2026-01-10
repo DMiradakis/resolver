@@ -11,7 +11,7 @@
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <DebugType>embedded</DebugType>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-    <Version>0.0.13</Version>
+    <Version>0.0.14</Version>
   </PropertyGroup>
 
   <ItemGroup>
