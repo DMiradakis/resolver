@@ -8,8 +8,10 @@
     "build": "nuxt build --extends docus"
   },
   "dependencies": {
-    "docus": "latest",
+    "@nuxtjs/sitemap": "^7.5.2",
     "better-sqlite3": "^12.5.0",
-    "nuxt": "^4.2.2"
+    "docus": "latest",
+    "nuxt": "^4.2.2",
+    "nuxt-gtag": "^4.1.0"
   }
 }
