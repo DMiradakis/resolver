@@ -1,11 +1,16 @@
 export default defineNuxtConfig({
-    modules: ['@nuxt/ui', 'nuxt-gtag'],
+    modules: [
+      '@nuxt/ui',
+      'nuxt-gtag',
+      '@nuxtjs/sitemap'
+    ],
     nitro: {
         preset: 'static'
     },
-    site: {
-        name: 'Resolver',
-    },
+    site: { 
+        url: 'https://resolver.solopreneur.sh', 
+        name: 'Resolver' 
+    }, 
     gtag: {
         id: 'G-QLFG8NVHYX'
     }
