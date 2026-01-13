@@ -1,7 +1,7 @@
 ---
 seo:
   title: Resolver
-  description: A small, cross platform utility CLI to use in conjunction with Da Vinci Resolve.
+  description: A small, cross platform utility CLI to use in conjunction with DaVinci Resolve.
 ---
 
 ::u-page-hero
@@ -9,7 +9,7 @@ seo:
 Resolver
 
 #description
-A small, cross platform utility CLI to use in conjunction with Da Vinci Resolve.
+A small, cross platform utility CLI to use in conjunction with DaVinci Resolve.
 
 #links
   :::u-button
