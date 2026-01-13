@@ -40,10 +40,10 @@ app.Configure(config =>
     config.AddBranch("project", projectConfig =>
     {
         projectConfig.AddCommand<ScaffoldProjectCommand>("scaffold")
-            .WithDescription("Scaffolds a new Da Vinci Resolve project directory with subfolders.")
+            .WithDescription("Scaffolds a new DaVinci Resolve project directory with subfolders.")
             .WithExample("project scaffold my-project");
         projectConfig.AddCommand<ArchiveProjectCommand>("archive")
-            .WithDescription("Archives an existing Da Vinci Resolve project directory.")
+            .WithDescription("Archives an existing DaVinci Resolve project directory.")
             .WithExample("project archive my-project");
         projectConfig.AddCommand<ExportProjectCommand>("export")
             .WithDescription("Copies the project export files to the default export directory.")
