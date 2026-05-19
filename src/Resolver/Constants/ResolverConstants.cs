@@ -7,19 +7,13 @@
         public const string ProjectExportFolderName = "Exports";
         public static readonly string[] ScaffoldSubfolders =
         [
-            "Footage/ScreenRecordings",
-            "Footage/Camera",
-            "Footage/Stock",
-            "Audio/Voiceover",
-            "Audio/Music",
-            "Audio/SFX",
-            "Graphics",
+            "Footage",
+            "Audio",
             "Exports",
             "Cache",
             "Proxies",
             "Gallery",
             "ResolveProjectFiles",
-            "ProjectNotes"
         ];
 
         public static class ConfigKeyMappings
