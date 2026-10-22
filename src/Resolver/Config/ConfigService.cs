@@ -62,7 +62,7 @@ namespace Resolver.Config
         {
             var configExists = _config.Value.Profiles.TryGetValue(_config.Value.ActiveProfile, out var profileConfig);
             if (!configExists)
-                throw new Exception("An active config profile has not been selected. Please set an active config profile.");
+                throw new InvalidOperationException("An active config profile has not been selected. Please set an active config profile.");
 
             if (profileConfig is null)
                 throw new Exception("The selected config profile is NULL. Please set the profile's config values.");
