@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,20 @@ using Resolver.Versioning;
 using Spectre.Console.Cli;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+#region Read embedded app settings.
+
+using (var appSettingsStream = Assembly.GetExecutingAssembly()
+    .GetManifestResourceStream("Resolver.appsettings.json")
+    ?? throw new InvalidOperationException("Could not load embedded appsettings.json."))
+{
+    builder.Configuration.AddJsonStream(appSettingsStream);
+}
+
+builder.Services.Configure<UpdateSettings>(
+    builder.Configuration.GetSection(UpdateSettings.SectionName));
+
+#endregion
 
 #region Read and register resolver config file.
 
@@ -37,6 +52,9 @@ app.Configure(config =>
     config.AddCommand<DisplayVersionCommand>("version")
         .WithDescription("Displays the current version of the app.")
         .WithExample("version");
+    config.AddCommand<UpdateCommand>("update")
+        .WithDescription("Checks GitHub for the latest release.")
+        .WithExample("update");
     config.AddBranch("project", projectConfig =>
     {
         projectConfig.AddCommand<ScaffoldProjectCommand>("scaffold")
