@@ -27,8 +27,39 @@ jobs:
             exit 1
           fi
 
+  test:
+    needs: verify
+    name: Test release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Verify release tag matches project version
+        shell: bash
+        run: |
+          PROJECT_VERSION=$(dotnet msbuild src/Resolver/Resolver.csproj -getProperty:Version)
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+
+          if [ "$TAG_VERSION" != "$PROJECT_VERSION" ]; then
+            echo "Error: tag version ($TAG_VERSION) does not match project version ($PROJECT_VERSION)"
+            exit 1
+          fi
+
+          echo "Release tag matches project version: $PROJECT_VERSION"
+
+      - name: Build and test
+        run: dotnet test src/Resolver.sln --configuration Release --verbosity minimal
+
   build:
-    needs: verify  # Only run if verify passes
+    needs: test  # Only publish binaries after verification and tests pass
     name: Build ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
